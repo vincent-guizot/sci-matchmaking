@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import API from "../../config/api";
 
-const RELIGIONS = ["Islam", "Kristen", "Katolik", "Hindu", "Buddha"];
+const RELIGIONS = ["Kristen", "Katolik", "Konghucu", "Buddha"];
 
 const AdminAdd = () => {
   const [formData, setFormData] = useState({

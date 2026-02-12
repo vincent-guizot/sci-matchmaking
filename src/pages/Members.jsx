@@ -53,9 +53,8 @@ const Members = () => {
             <option value="">All Religions</option>
             <option value="Kristen">Kristen</option>
             <option value="Katolik">Katolik</option>
-            <option value="Islam">Islam</option>
-            <option value="Hindu">Hindu</option>
-            <option value="Budha">Budha</option>
+            <option value="Buddha">Budha</option>
+            <option value="Konghucu">Konghucu</option>
           </select>
         </div>
       </div>

@@ -4,7 +4,7 @@ import useMembers from "../hooks/useMember";
 import API from "../config/api";
 import { FaMale, FaFemale, FaHeart } from "react-icons/fa";
 
-const RELIGIONS = ["Islam", "Kristen", "Katolik", "Hindu", "Buddha"];
+const RELIGIONS = ["Kristen", "Katolik", "Konghucu", "Buddha"];
 
 const MatchMaking = () => {
   const { members, loading } = useMembers();
