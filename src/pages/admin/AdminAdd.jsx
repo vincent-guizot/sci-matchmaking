@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import API from "../../config/api";
 
+const RELIGIONS = ["Islam", "Kristen", "Katolik", "Hindu", "Buddha"];
+
 const AdminAdd = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     number: "",
     address: "",
+    religion: "", // ✅ default ALL
+    birthYear: "",
     image: "",
     gender: "M",
   });
@@ -15,9 +19,15 @@ const AdminAdd = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "number" ? Number(value) : value,
+      [name]:
+        name === "number" || name === "birthYear"
+          ? value === ""
+            ? ""
+            : Number(value)
+          : value,
     }));
   };
 
@@ -26,20 +36,24 @@ const AdminAdd = () => {
 
     try {
       setLoading(true);
+
       await API.post("/participants", formData);
 
       await Swal.fire({
         title: "Success",
-        text: "Participant added",
+        text: "Participant added successfully",
         icon: "success",
         timer: 1400,
         showConfirmButton: false,
       });
 
+      // ✅ reset form
       setFormData({
         fullName: "",
         number: "",
         address: "",
+        religion: "",
+        birthYear: "",
         image: "",
         gender: "M",
       });
@@ -64,6 +78,7 @@ const AdminAdd = () => {
         onSubmit={handleSubmit}
         className="space-y-4 border border-gray-300 rounded-lg p-5 bg-white shadow-sm"
       >
+        {/* Full Name */}
         <div>
           <label className="block mb-1 font-medium">Full Name</label>
           <input
@@ -71,10 +86,11 @@ const AdminAdd = () => {
             value={formData.fullName}
             onChange={handleChange}
             required
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
           />
         </div>
 
+        {/* Number */}
         <div>
           <label className="block mb-1 font-medium">Number</label>
           <input
@@ -83,44 +99,68 @@ const AdminAdd = () => {
             value={formData.number}
             onChange={handleChange}
             required
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
           />
         </div>
 
+        {/* Address */}
         <div>
           <label className="block mb-1 font-medium">Address</label>
           <input
             name="address"
             value={formData.address}
             onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
           />
         </div>
 
+        {/* Religion */}
+        <div>
+          <label className="block mb-1 font-medium">Religion</label>
+          <select
+            name="religion"
+            value={formData.religion}
+            onChange={handleChange}
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+          >
+            <option value="">Choose</option>
+            {RELIGIONS.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Birth Year */}
+        <div>
+          <label className="block mb-1 font-medium">Birth Year</label>
+          <input
+            name="birthYear"
+            type="number"
+            min="1900"
+            max={new Date().getFullYear()}
+            value={formData.birthYear}
+            onChange={handleChange}
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+          />
+        </div>
+
+        {/* Gender */}
         <div>
           <label className="block mb-1 font-medium">Gender</label>
           <select
             name="gender"
             value={formData.gender}
             onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
           >
             <option value="M">Man</option>
             <option value="F">Woman</option>
           </select>
         </div>
 
-        {/* <div>
-          <label className="block mb-1 font-medium">Image URL</label>
-          <input
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="https://..."
-            className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div> */}
-
+        {/* Submit */}
         <button
           disabled={loading}
           className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 transition disabled:opacity-60"
