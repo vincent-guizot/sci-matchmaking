@@ -51,10 +51,10 @@ const Members = () => {
             className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Religions</option>
-            <option value="Kristen">Kristen</option>
-            <option value="Katolik">Katolik</option>
-            <option value="Buddha">Budha</option>
-            <option value="Konghucu">Konghucu</option>
+            <option value="kristen">Kristen</option>
+            <option value="katolik">Katolik</option>
+            <option value="buddha">Budha</option>
+            <option value="konghucu">Konghucu</option>
           </select>
         </div>
       </div>
@@ -67,8 +67,8 @@ const Members = () => {
           <table className="min-w-[500px] w-full border border-gray-300 text-sm rounded-lg overflow-hidden">
             <thead className="bg-gray-200">
               <tr>
-                <th className="border px-3 py-2 text-left">Name</th>
                 <th className="border px-3 py-2 text-left">Number</th>
+                <th className="border px-3 py-2 text-left">Name</th>
                 <th className="border px-3 py-2 text-left">Religion</th>
                 <th className="border px-3 py-2 text-left">Age</th>
               </tr>
@@ -77,8 +77,8 @@ const Members = () => {
             <tbody>
               {filteredMembers.map((member) => (
                 <tr key={member._id} className="hover:bg-gray-50 transition">
-                  <td className="border px-3 py-2">{member.fullName}</td>
                   <td className="border px-3 py-2">{member.number}</td>
+                  <td className="border px-3 py-2">{member.fullName}</td>
                   <td className="border px-3 py-2">{member.religion}</td>
                   <td className="border px-3 py-2">{member.age}</td>
                 </tr>

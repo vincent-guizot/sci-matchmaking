@@ -4,7 +4,7 @@ import useMembers from "../hooks/useMember";
 import API from "../config/api";
 import { FaMale, FaFemale, FaHeart } from "react-icons/fa";
 
-const RELIGIONS = ["Kristen", "Katolik", "Konghucu", "Buddha"];
+const RELIGIONS = ["kristen", "katolik", "konghucu", "buddha"];
 
 const MatchMaking = () => {
   const { members, loading } = useMembers();
@@ -199,8 +199,8 @@ const MatchMaking = () => {
                           : "hover:border-green-500 cursor-pointer"
                     }`}
                 >
-                  <p className="text-sm font-medium">{m.fullName}</p>
-                  <p className="text-lg font-semibold">{m.number}</p>
+                  <p className="text-lg font-semibold">{m.fullName}</p>
+                  {/* <p className="text-lg font-semibold">{m.number}</p> */}
                   <p className="text-xs opacity-80">{m.religion || "-"}</p>
 
                   {active && <FaHeart className="mx-auto mt-1 text-white" />}
