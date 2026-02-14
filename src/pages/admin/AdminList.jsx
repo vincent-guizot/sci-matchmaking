@@ -90,7 +90,7 @@ const AdminList = () => {
                 <th className="border px-3 py-2 text-left">Name</th>
                 <th className="border px-3 py-2 text-left">Number</th>
                 <th className="border px-3 py-2 text-left">Religion</th>
-                <th className="border px-3 py-2 text-left">Birth Year</th>
+                <th className="border px-3 py-2 text-left">Age</th>
                 <th className="border px-3 py-2 text-left">Address</th>
                 <th className="border px-3 py-2 text-left">Gender</th>
                 {/* <th className="border px-3 py-2 text-left">Image</th> */}
@@ -104,7 +104,7 @@ const AdminList = () => {
                   <td className="border px-3 py-2 font-medium">{m.fullName}</td>
                   <td className="border px-3 py-2">{m.number}</td>
                   <td className="border px-3 py-2">{m.religion || "-"}</td>
-                  <td className="border px-3 py-2">{m.birthYear || "-"}</td>
+                  <td className="border px-3 py-2">{m.age || "-"}</td>
                   <td className="border px-3 py-2">{m.address || "-"}</td>
                   <td className="border px-3 py-2">{m.gender}</td>
 

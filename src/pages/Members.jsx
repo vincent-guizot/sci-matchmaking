@@ -70,7 +70,7 @@ const Members = () => {
                 <th className="border px-3 py-2 text-left">Name</th>
                 <th className="border px-3 py-2 text-left">Number</th>
                 <th className="border px-3 py-2 text-left">Religion</th>
-                <th className="border px-3 py-2 text-left">Birth Year</th>
+                <th className="border px-3 py-2 text-left">Age</th>
               </tr>
             </thead>
 
@@ -80,7 +80,7 @@ const Members = () => {
                   <td className="border px-3 py-2">{member.fullName}</td>
                   <td className="border px-3 py-2">{member.number}</td>
                   <td className="border px-3 py-2">{member.religion}</td>
-                  <td className="border px-3 py-2">{member.birthYear}</td>
+                  <td className="border px-3 py-2">{member.age}</td>
                 </tr>
               ))}
             </tbody>

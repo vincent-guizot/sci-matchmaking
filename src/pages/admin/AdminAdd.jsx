@@ -10,7 +10,7 @@ const AdminAdd = () => {
     number: "",
     address: "",
     religion: "", // ✅ default ALL
-    birthYear: "",
+    age: "",
     image: "",
     gender: "M",
   });
@@ -23,7 +23,7 @@ const AdminAdd = () => {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "number" || name === "birthYear"
+        name === "number" || name === "age"
           ? value === ""
             ? ""
             : Number(value)
@@ -53,7 +53,7 @@ const AdminAdd = () => {
         number: "",
         address: "",
         religion: "",
-        birthYear: "",
+        age: "",
         image: "",
         gender: "M",
       });
@@ -136,11 +136,10 @@ const AdminAdd = () => {
         <div>
           <label className="block mb-1 font-medium">Birth Year</label>
           <input
-            name="birthYear"
+            name="age"
             type="number"
-            min="1900"
             max={new Date().getFullYear()}
-            value={formData.birthYear}
+            value={formData.age}
             onChange={handleChange}
             className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
           />
