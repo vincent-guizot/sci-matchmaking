@@ -2,9 +2,35 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import API from "../../config/api";
 
-const RELIGIONS = ["", "kristen", "katolik", "konghucu", "buddha"];
+const RELIGIONS = [
+  {
+    id: 1,
+    value: "",
+    label: "Tidak Sertakan",
+  },
+  {
+    id: 2,
+    value: "kristen",
+    label: "Kristen",
+  },
+  {
+    id: 3,
+    value: "katholik",
+    label: "Katholik",
+  },
+  {
+    id: 4,
+    value: "buddha",
+    label: "Buddha",
+  },
+  {
+    id: 5,
+    value: "konghucu",
+    label: "Konghucu",
+  },
+];
 
-const AdminAdd = () => {
+const AddPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     number: "",
@@ -154,8 +180,8 @@ const AdminAdd = () => {
             >
               <option value="">Pilih agama</option>
               {RELIGIONS.map((r) => (
-                <option key={r} value={r} className="capitalize">
-                  {r}
+                <option key={r.id} value={r.value} className="capitalize">
+                  {r.label}
                 </option>
               ))}
             </select>
@@ -185,4 +211,4 @@ const AdminAdd = () => {
   );
 };
 
-export default AdminAdd;
+export default AddPage;

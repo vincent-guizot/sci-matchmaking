@@ -57,7 +57,7 @@ const Login = () => {
         {/* Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
           {/* Hint credentials */}
-          <div className="mb-5 p-3 bg-gray-50 rounded-xl text-xs text-gray-500 space-y-0.5">
+          {/* <div className="mb-5 p-3 bg-gray-50 rounded-xl text-xs text-gray-500 space-y-0.5">
             <p>
               <span className="font-medium text-gray-700">Admin:</span> admin /
               admin123
@@ -66,7 +66,7 @@ const Login = () => {
               <span className="font-medium text-gray-700">Member:</span> member
               / member123
             </p>
-          </div>
+          </div> */}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username */}

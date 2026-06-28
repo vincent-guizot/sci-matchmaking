@@ -6,8 +6,8 @@ import MatchMaking from "../../pages/MatchMaking";
 import Matches from "../../pages/Matches";
 import ParticipantsLiked from "../../pages/ParticipantsLiked";
 import MostLiked from "../../pages/MostLiked";
-import AdminAdd from "../../pages/admin/AdminAdd";
-import AdminList from "../../pages/admin/AdminList";
+import AddPage from "../../pages/admin/AddPage";
+import ListPage from "../../pages/admin/ListPage";
 import Login from "../../pages/auth/Login";
 
 // Guard — redirect ke /login kalau belum login
@@ -51,11 +51,11 @@ const router = createBrowserRouter([
         children: [
           {
             path: "add",
-            element: <AdminAdd />,
+            element: <AddPage />,
           },
           {
             path: "list",
-            element: <AdminList />,
+            element: <ListPage />,
           },
         ],
       },

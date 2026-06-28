@@ -9,7 +9,7 @@ const RELIGION_BADGE = {
   konghucu: "bg-amber-100 text-amber-700",
 };
 
-const AdminList = () => {
+const ListPage = () => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterGender, setFilterGender] = useState("M");
@@ -224,4 +224,4 @@ const AdminList = () => {
   );
 };
 
-export default AdminList;
+export default ListPage;
