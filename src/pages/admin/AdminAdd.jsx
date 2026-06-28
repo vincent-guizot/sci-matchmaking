@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import API from "../../config/api";
 
-const RELIGIONS = ["kristen", "katolik", "konghucu", "buddha"];
+const RELIGIONS = ["", "kristen", "katolik", "konghucu", "buddha"];
 
 const AdminAdd = () => {
   const [formData, setFormData] = useState({
-    fullName: "", number: "", address: "", religion: "", age: "", image: "", gender: "M",
+    fullName: "",
+    number: "",
+    address: "",
+    religion: "",
+    age: "",
+    image: "",
+    gender: "M",
   });
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +20,12 @@ const AdminAdd = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "number" || name === "age" ? (value === "" ? "" : Number(value)) : value,
+      [name]:
+        name === "number" || name === "age"
+          ? value === ""
+            ? ""
+            : Number(value)
+          : value,
     }));
   };
 
@@ -23,10 +34,28 @@ const AdminAdd = () => {
     try {
       setLoading(true);
       await API.post("/participants", formData);
-      await Swal.fire({ title: "Berhasil!", text: "Peserta berhasil ditambahkan", icon: "success", timer: 1400, showConfirmButton: false });
-      setFormData({ fullName: "", number: "", address: "", religion: "", age: "", image: "", gender: "M" });
+      await Swal.fire({
+        title: "Berhasil!",
+        text: "Peserta berhasil ditambahkan",
+        icon: "success",
+        timer: 1400,
+        showConfirmButton: false,
+      });
+      setFormData({
+        fullName: "",
+        number: "",
+        address: "",
+        religion: "",
+        age: "",
+        image: "",
+        gender: "M",
+      });
     } catch (err) {
-      Swal.fire("Gagal", err.response?.data?.message || "Terjadi kesalahan", "error");
+      Swal.fire(
+        "Gagal",
+        err.response?.data?.message || "Terjadi kesalahan",
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -39,13 +68,16 @@ const AdminAdd = () => {
     </div>
   );
 
-  const inputCls = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 transition";
+  const inputCls =
+    "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 transition";
 
   return (
     <div className="max-w-xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h2 className="text-xl font-bold text-gray-900">Tambah peserta</h2>
-        <p className="text-sm text-gray-400 mt-0.5">Isi form di bawah untuk menambahkan peserta baru</p>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Isi form di bawah untuk menambahkan peserta baru
+        </p>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
@@ -65,14 +97,19 @@ const AdminAdd = () => {
 
             <Field label="Gender">
               <div className="flex gap-2">
-                {[{ v: "M", l: "Pria" }, { v: "F", l: "Wanita" }].map(({ v, l }) => (
+                {[
+                  { v: "M", l: "Pria" },
+                  { v: "F", l: "Wanita" },
+                ].map(({ v, l }) => (
                   <button
                     key={v}
                     type="button"
                     onClick={() => setFormData((p) => ({ ...p, gender: v }))}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${
                       formData.gender === v
-                        ? v === "M" ? "border-blue-400 bg-blue-50 text-blue-700" : "border-pink-400 bg-pink-50 text-pink-700"
+                        ? v === "M"
+                          ? "border-blue-400 bg-blue-50 text-blue-700"
+                          : "border-pink-400 bg-pink-50 text-pink-700"
                         : "border-gray-200 text-gray-500 hover:border-gray-300"
                     }`}
                   >
@@ -85,22 +122,54 @@ const AdminAdd = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <Field label="Nomor">
-              <input name="number" type="number" value={formData.number} onChange={handleChange} required placeholder="No. peserta" className={inputCls} />
+              <input
+                name="number"
+                type="number"
+                value={formData.number}
+                onChange={handleChange}
+                required
+                placeholder="No. peserta"
+                className={inputCls}
+              />
             </Field>
             <Field label="Tahun lahir">
-              <input name="age" type="number" max={new Date().getFullYear()} value={formData.age} onChange={handleChange} placeholder="Cth: 1990" className={inputCls} />
+              <input
+                name="age"
+                type="number"
+                max={new Date().getFullYear()}
+                value={formData.age}
+                onChange={handleChange}
+                placeholder="Cth: 1990"
+                className={inputCls}
+              />
             </Field>
           </div>
 
           <Field label="Agama">
-            <select name="religion" value={formData.religion} onChange={handleChange} className={inputCls}>
+            <select
+              name="religion"
+              value={formData.religion}
+              onChange={handleChange}
+              className={inputCls}
+            >
               <option value="">Pilih agama</option>
-              {RELIGIONS.map((r) => <option key={r} value={r} className="capitalize">{r}</option>)}
+              {RELIGIONS.map((r) => (
+                <option key={r} value={r} className="capitalize">
+                  {r}
+                </option>
+              ))}
             </select>
           </Field>
 
-          <Field label="Alamat">
-            <textarea name="address" value={formData.address} onChange={handleChange} placeholder="Alamat lengkap (opsional)" rows={3} className={inputCls + " resize-none"} />
+          <Field label="Alamat/Kota">
+            <textarea
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="Alamat lengkap (opsional)"
+              rows={3}
+              className={inputCls + " resize-none"}
+            />
           </Field>
 
           <button

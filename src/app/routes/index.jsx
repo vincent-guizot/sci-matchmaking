@@ -1,14 +1,14 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import Layout from "../layouts/Layout";
-import Members from "../pages/Members";
-import MatchMaking from "../pages/MatchMaking";
-import Matches from "../pages/Matches";
-import ParticipantsLiked from "../pages/ParticipantsLiked";
-import MostLiked from "../pages/MostLiked";
-import AdminAdd from "../pages/admin/AdminAdd";
-import AdminList from "../pages/admin/AdminList";
-import Login from "../pages/auth/Login";
+import Layout from "../../layouts/Layout";
+import Members from "../../pages/Members";
+import MatchMaking from "../../pages/MatchMaking";
+import Matches from "../../pages/Matches";
+import ParticipantsLiked from "../../pages/ParticipantsLiked";
+import MostLiked from "../../pages/MostLiked";
+import AdminAdd from "../../pages/admin/AdminAdd";
+import AdminList from "../../pages/admin/AdminList";
+import Login from "../../pages/auth/Login";
 
 // Guard — redirect ke /login kalau belum login
 const ProtectedLayout = () => {

@@ -29,7 +29,11 @@ const MatchMaking = () => {
       return;
     }
     if (selectedLikes.length >= 4) {
-      Swal.fire({ title: "Batas tercapai", text: "Maksimal 4 pilihan", icon: "warning" });
+      Swal.fire({
+        title: "Batas tercapai",
+        text: "Maksimal 4 pilihan",
+        icon: "warning",
+      });
       return;
     }
     setSelectedLikes([...selectedLikes, id]);
@@ -37,16 +41,28 @@ const MatchMaking = () => {
 
   const submitLikes = async () => {
     if (!participantId || selectedLikes.length === 0) {
-      Swal.fire({ title: "Perhatian", text: "Pilih peserta dan minimal 1 kandidat", icon: "error" });
+      Swal.fire({
+        title: "Perhatian",
+        text: "Pilih peserta dan minimal 1 kandidat",
+        icon: "error",
+      });
       return;
     }
     try {
       setSubmitting(true);
       await API.post("/likes/submit", { participantId, likes: selectedLikes });
-      Swal.fire({ title: "Berhasil!", text: "Pilihan berhasil disimpan", icon: "success" });
+      Swal.fire({
+        title: "Berhasil!",
+        text: "Pilihan berhasil disimpan",
+        icon: "success",
+      });
       setSelectedLikes([]);
     } catch (err) {
-      Swal.fire({ title: "Gagal", text: err.response?.data?.message || "Terjadi kesalahan", icon: "error" });
+      Swal.fire({
+        title: "Gagal",
+        text: err.response?.data?.message || "Terjadi kesalahan",
+        icon: "error",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -73,20 +89,33 @@ const MatchMaking = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-gray-900">Matchmaking</h2>
-        <p className="text-sm text-gray-400 mt-0.5">Pilih peserta lalu tentukan hingga 4 kandidat pilihan</p>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Pilih peserta lalu tentukan hingga 4 kandidat pilihan
+        </p>
       </div>
 
       {/* Step 1 — Gender + participant */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Langkah 1 — Pilih peserta</p>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+          Langkah 1 — Pilih peserta
+        </p>
 
         <div className="flex gap-2">
-          {[{ v: "M", l: "Pria", cls: "bg-blue-500 hover:bg-blue-600" }, { v: "F", l: "Wanita", cls: "bg-pink-500 hover:bg-pink-600" }].map(({ v, l, cls }) => (
+          {[
+            { v: "M", l: "Pria", cls: "bg-blue-500 hover:bg-blue-600" },
+            { v: "F", l: "Wanita", cls: "bg-pink-500 hover:bg-pink-600" },
+          ].map(({ v, l, cls }) => (
             <button
               key={v}
-              onClick={() => { setParticipantGender(v); setParticipantId(""); setSelectedLikes([]); }}
+              onClick={() => {
+                setParticipantGender(v);
+                setParticipantId("");
+                setSelectedLikes([]);
+              }}
               className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
-                participantGender === v ? `${cls} text-white` : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                participantGender === v
+                  ? `${cls} text-white`
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               {l}
@@ -97,15 +126,20 @@ const MatchMaking = () => {
         <select
           disabled={!participantGender}
           value={participantId}
-          onChange={(e) => { setParticipantId(e.target.value); setSelectedLikes([]); }}
+          onChange={(e) => {
+            setParticipantId(e.target.value);
+            setSelectedLikes([]);
+          }}
           className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <option value="">Pilih peserta...</option>
-          {members.filter((m) => m.gender === participantGender).map((m) => (
-            <option key={m._id} value={m._id}>
-              {m.number} — {m.fullName}
-            </option>
-          ))}
+          {members
+            .filter((m) => m.gender === participantGender)
+            .map((m) => (
+              <option key={m._id} value={m._id}>
+                {m.number} — {m.fullName}
+              </option>
+            ))}
         </select>
       </div>
 
@@ -114,9 +148,12 @@ const MatchMaking = () => {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
-              Langkah 2 — Pilih kandidat ({oppositeGender === "F" ? "Wanita" : "Pria"})
+              Langkah 2 — Pilih kandidat (
+              {oppositeGender === "F" ? "Wanita" : "Pria"})
             </p>
-            <span className={`text-sm font-semibold px-3 py-1 rounded-full ${selectedLikes.length >= 4 ? "bg-rose-100 text-rose-600" : "bg-gray-100 text-gray-600"}`}>
+            <span
+              className={`text-sm font-semibold px-3 py-1 rounded-full ${selectedLikes.length >= 4 ? "bg-rose-100 text-rose-600" : "bg-gray-100 text-gray-600"}`}
+            >
               {selectedLikes.length} / 4 dipilih
             </span>
           </div>
@@ -153,23 +190,42 @@ const MatchMaking = () => {
                     active
                       ? "border-rose-400 bg-rose-50"
                       : disabled
-                      ? "border-gray-100 bg-gray-50 opacity-40 cursor-not-allowed"
-                      : "border-gray-100 hover:border-rose-200 hover:bg-rose-50/50"
+                        ? "border-gray-100 bg-gray-50 opacity-40 cursor-not-allowed"
+                        : "border-gray-100 hover:border-rose-200 hover:bg-rose-50/50"
                   }`}
                 >
                   {active && (
                     <div className="absolute top-2 right-2 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-3 h-3 text-white"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </div>
                   )}
-                  <div className={`w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-xs font-semibold ${oppositeGender === "F" ? "bg-pink-100 text-pink-700" : "bg-blue-100 text-blue-700"}`}>
-                    {m.fullName?.split(" ").slice(0, 2).map((w) => w[0]).join("")}
+                  <div
+                    className={`w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-xs font-semibold ${oppositeGender === "F" ? "bg-pink-100 text-pink-700" : "bg-blue-100 text-blue-700"}`}
+                  >
+                    {m.fullName
+                      ?.split(" ")
+                      .slice(0, 2)
+                      .map((w) => w[0])
+                      .join("")}
                   </div>
-                  <p className="text-sm font-semibold text-gray-800 leading-tight">{m.fullName}</p>
+                  <p className="text-sm font-semibold text-gray-800 leading-tight">
+                    {m.fullName}
+                  </p>
                   {m.religion && (
-                    <span className={`mt-1 inline-block text-xs px-2 py-0.5 rounded-full font-medium ${RELIGION_BADGE[m.religion] || "bg-gray-100 text-gray-600"}`}>
+                    <span
+                      className={`mt-1 inline-block text-xs px-2 py-0.5 rounded-full font-medium ${RELIGION_BADGE[m.religion] || "bg-gray-100 text-gray-600"}`}
+                    >
                       {m.religion}
                     </span>
                   )}
@@ -192,7 +248,9 @@ const MatchMaking = () => {
           disabled={submitting || selectedLikes.length === 0}
           className="w-full bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {submitting ? "Menyimpan..." : `Simpan pilihan (${selectedLikes.length} dipilih)`}
+          {submitting
+            ? "Menyimpan..."
+            : `Simpan pilihan (${selectedLikes.length} dipilih)`}
         </button>
       )}
     </div>

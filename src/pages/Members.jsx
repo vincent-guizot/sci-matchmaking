@@ -16,7 +16,9 @@ const Members = () => {
 
   const filtered = members.filter((m) => {
     const gMatch = filterGender ? m.gender === filterGender : true;
-    const rMatch = filterReligion ? String(m.religion) === filterReligion : true;
+    const rMatch = filterReligion
+      ? String(m.religion) === filterReligion
+      : true;
     const sMatch = search
       ? m.fullName?.toLowerCase().includes(search.toLowerCase())
       : true;
@@ -39,8 +41,19 @@ const Members = () => {
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Search */}
         <div className="relative flex-1">
-          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
           <input
             value={search}
@@ -52,7 +65,11 @@ const Members = () => {
 
         {/* Gender filter */}
         <div className="flex gap-1.5 bg-gray-100 p-1 rounded-xl">
-          {[{ v: "", l: "Semua" }, { v: "M", l: "Pria" }, { v: "F", l: "Wanita" }].map(({ v, l }) => (
+          {[
+            { v: "", l: "Semua" },
+            { v: "M", l: "Pria" },
+            { v: "F", l: "Wanita" },
+          ].map(({ v, l }) => (
             <button
               key={v}
               onClick={() => setFilterGender(v)}
@@ -92,32 +109,54 @@ const Members = () => {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50">
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide w-16">No.</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">Nama</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">Agama</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">Gender</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">Thn Lahir</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide w-16">
+                    No.
+                  </th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    Nama
+                  </th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    Agama
+                  </th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    Gender
+                  </th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide">
+                    Thn Lahir
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {filtered.map((m) => (
                   <tr key={m._id} className="hover:bg-gray-50 transition group">
-                    <td className="px-5 py-3 text-gray-400 font-mono text-xs">{m.number}</td>
+                    <td className="px-5 py-3 text-gray-400 font-mono text-xs">
+                      {m.number}
+                    </td>
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 ${
-                            m.gender === "M" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"
+                            m.gender === "M"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-pink-100 text-pink-700"
                           }`}
                         >
-                          {m.fullName?.split(" ").slice(0, 2).map((w) => w[0]).join("")}
+                          {m.fullName
+                            ?.split(" ")
+                            .slice(0, 2)
+                            .map((w) => w[0])
+                            .join("")}
                         </div>
-                        <span className="font-medium text-gray-800">{m.fullName}</span>
+                        <span className="font-medium text-gray-800">
+                          {m.fullName}
+                        </span>
                       </div>
                     </td>
                     <td className="px-5 py-3">
                       {m.religion ? (
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${RELIGION_BADGE[m.religion] || "bg-gray-100 text-gray-600"}`}>
+                        <span
+                          className={`text-xs px-2.5 py-1 rounded-full font-medium ${RELIGION_BADGE[m.religion] || "bg-gray-100 text-gray-600"}`}
+                        >
                           {m.religion}
                         </span>
                       ) : (
@@ -125,7 +164,9 @@ const Members = () => {
                       )}
                     </td>
                     <td className="px-5 py-3">
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${m.gender === "M" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"}`}>
+                      <span
+                        className={`text-xs px-2.5 py-1 rounded-full font-medium ${m.gender === "M" ? "bg-blue-100 text-blue-700" : "bg-pink-100 text-pink-700"}`}
+                      >
                         {m.gender === "M" ? "Pria" : "Wanita"}
                       </span>
                     </td>
