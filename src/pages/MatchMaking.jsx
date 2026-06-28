@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import useMembers from "../hooks/useMember";
 import API from "../config/api";
-import { FaMale, FaFemale, FaHeart } from "react-icons/fa";
 
 const RELIGIONS = ["kristen", "katolik", "konghucu", "buddha"];
 
+const RELIGION_BADGE = {
+  kristen: "bg-blue-100 text-blue-700",
+  katolik: "bg-pink-100 text-pink-700",
+  buddha: "bg-green-100 text-green-700",
+  konghucu: "bg-amber-100 text-amber-700",
+};
+
 const MatchMaking = () => {
   const { members, loading } = useMembers();
-
   const [participantGender, setParticipantGender] = useState("");
   const [participantId, setParticipantId] = useState("");
   const [selectedLikes, setSelectedLikes] = useState([]);
@@ -18,56 +23,35 @@ const MatchMaking = () => {
   const participant = members.find((m) => m._id === participantId);
   const oppositeGender = participant?.gender === "M" ? "F" : "M";
 
-  // =====================
-  // TOGGLE LIKE
-  // =====================
   const toggleLike = (id) => {
     if (selectedLikes.includes(id)) {
       setSelectedLikes(selectedLikes.filter((x) => x !== id));
       return;
     }
-
     if (selectedLikes.length >= 4) {
-      Swal.fire("Limit reached", "Max 4 likes allowed", "warning");
+      Swal.fire({ title: "Batas tercapai", text: "Maksimal 4 pilihan", icon: "warning" });
       return;
     }
-
     setSelectedLikes([...selectedLikes, id]);
   };
 
-  // =====================
-  // SUBMIT
-  // =====================
   const submitLikes = async () => {
     if (!participantId || selectedLikes.length === 0) {
-      Swal.fire("Error", "Choose participant & likes first", "error");
+      Swal.fire({ title: "Perhatian", text: "Pilih peserta dan minimal 1 kandidat", icon: "error" });
       return;
     }
-
     try {
       setSubmitting(true);
-
-      await API.post("/likes/submit", {
-        participantId,
-        likes: selectedLikes,
-      });
-
-      Swal.fire("Success", "Likes submitted & matched!", "success");
+      await API.post("/likes/submit", { participantId, likes: selectedLikes });
+      Swal.fire({ title: "Berhasil!", text: "Pilihan berhasil disimpan", icon: "success" });
       setSelectedLikes([]);
     } catch (err) {
-      Swal.fire(
-        "Error",
-        err.response?.data?.message || "Failed to submit",
-        "error",
-      );
+      Swal.fire({ title: "Gagal", text: err.response?.data?.message || "Terjadi kesalahan", icon: "error" });
     } finally {
       setSubmitting(false);
     }
   };
 
-  // =====================
-  // FILTER CANDIDATES
-  // =====================
   const filteredCandidates = members.filter((m) => {
     if (!participant) return false;
     if (m.gender !== oppositeGender) return false;
@@ -76,157 +60,141 @@ const MatchMaking = () => {
     return true;
   });
 
-  if (loading) return <p className="p-6">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-64">
+        <div className="w-7 h-7 border-2 border-rose-200 border-t-rose-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4 sm:p-6 max-w-5xl mx-auto space-y-6">
-      {/* HEADER */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-blue-700">Match Making</h2>
-        <p className="text-sm text-gray-500">
-          Choose participant & select up to 4 people you like
-        </p>
+    <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+      {/* Header */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900">Matchmaking</h2>
+        <p className="text-sm text-gray-400 mt-0.5">Pilih peserta lalu tentukan hingga 4 kandidat pilihan</p>
       </div>
 
-      {/* =====================
-          FILTER BAR
-      ===================== */}
-      <div className="flex flex-col sm:flex-row justify-between gap-3 items-center">
-        {/* LEFT — Gender */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => {
-              setParticipantGender("M");
-              setParticipantId("");
-              setSelectedLikes([]);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-md transition
-              ${
-                participantGender === "M"
-                  ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-white hover:bg-gray-100"
-              }`}
-          >
-            <FaMale /> Man
-          </button>
+      {/* Step 1 — Gender + participant */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Langkah 1 — Pilih peserta</p>
 
-          <button
-            onClick={() => {
-              setParticipantGender("F");
-              setParticipantId("");
-              setSelectedLikes([]);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-md transition
-              ${
-                participantGender === "F"
-                  ? "bg-pink-500 text-white border-pink-500"
-                  : "bg-white hover:bg-gray-100"
+        <div className="flex gap-2">
+          {[{ v: "M", l: "Pria", cls: "bg-blue-500 hover:bg-blue-600" }, { v: "F", l: "Wanita", cls: "bg-pink-500 hover:bg-pink-600" }].map(({ v, l, cls }) => (
+            <button
+              key={v}
+              onClick={() => { setParticipantGender(v); setParticipantId(""); setSelectedLikes([]); }}
+              className={`px-5 py-2 rounded-xl text-sm font-semibold transition ${
+                participantGender === v ? `${cls} text-white` : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
-          >
-            <FaFemale /> Woman
-          </button>
+            >
+              {l}
+            </button>
+          ))}
         </div>
 
-        {/* RIGHT — Religion */}
         <select
-          value={filterReligion}
-          onChange={(e) => setFilterReligion(e.target.value)}
-          className="border rounded px-3 py-2 text-sm"
+          disabled={!participantGender}
+          value={participantId}
+          onChange={(e) => { setParticipantId(e.target.value); setSelectedLikes([]); }}
+          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <option value="">All Religion</option>
-          {RELIGIONS.map((r) => (
-            <option key={r} value={r}>
-              {r}
+          <option value="">Pilih peserta...</option>
+          {members.filter((m) => m.gender === participantGender).map((m) => (
+            <option key={m._id} value={m._id}>
+              {m.number} — {m.fullName}
             </option>
           ))}
         </select>
       </div>
 
-      {/* =====================
-          PARTICIPANT SELECT
-      ===================== */}
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          Select Participant
-        </label>
-
-        <select
-          className="border px-3 py-2 w-full rounded"
-          disabled={!participantGender}
-          value={participantId}
-          onChange={(e) => {
-            setParticipantId(e.target.value);
-            setSelectedLikes([]);
-          }}
-        >
-          <option value="">Choose participant...</option>
-
-          {members
-            .filter((m) => m.gender === participantGender)
-            .map((m) => (
-              <option key={m._id} value={m._id}>
-                {m.number} - {m.fullName}
-              </option>
-            ))}
-        </select>
-      </div>
-
-      {/* =====================
-          LIKE GRID
-      ===================== */}
+      {/* Step 2 — Candidates */}
       {participant && (
-        <>
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>Candidates ({oppositeGender === "M" ? "Man" : "Woman"})</span>
-            <span>{selectedLikes.length} / 4 selected</span>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+              Langkah 2 — Pilih kandidat ({oppositeGender === "F" ? "Wanita" : "Pria"})
+            </p>
+            <span className={`text-sm font-semibold px-3 py-1 rounded-full ${selectedLikes.length >= 4 ? "bg-rose-100 text-rose-600" : "bg-gray-100 text-gray-600"}`}>
+              {selectedLikes.length} / 4 dipilih
+            </span>
           </div>
 
+          {/* Religion filter */}
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setFilterReligion("")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${!filterReligion ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+            >
+              Semua
+            </button>
+            {RELIGIONS.map((r) => (
+              <button
+                key={r}
+                onClick={() => setFilterReligion(r === filterReligion ? "" : r)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition capitalize ${filterReligion === r ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+
+          {/* Candidate grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {filteredCandidates.map((m) => {
               const active = selectedLikes.includes(m._id);
               const disabled = !active && selectedLikes.length >= 4;
-
               return (
                 <div
                   key={m._id}
                   onClick={() => !disabled && toggleLike(m._id)}
-                  className={`p-3 border text-center rounded-md transition
-                    ${
-                      active
-                        ? "bg-green-600 text-white scale-105"
-                        : disabled
-                          ? "opacity-40 cursor-not-allowed"
-                          : "hover:border-green-500 cursor-pointer"
-                    }`}
+                  className={`relative p-4 border-2 rounded-xl text-center cursor-pointer transition-all select-none ${
+                    active
+                      ? "border-rose-400 bg-rose-50"
+                      : disabled
+                      ? "border-gray-100 bg-gray-50 opacity-40 cursor-not-allowed"
+                      : "border-gray-100 hover:border-rose-200 hover:bg-rose-50/50"
+                  }`}
                 >
-                  <p className="text-lg font-semibold">{m.fullName}</p>
-                  {/* <p className="text-lg font-semibold">{m.number}</p> */}
-                  <p className="text-xs opacity-80">{m.religion || "-"}</p>
-
-                  {active && <FaHeart className="mx-auto mt-1 text-white" />}
+                  {active && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-rose-500 rounded-full flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className={`w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center text-xs font-semibold ${oppositeGender === "F" ? "bg-pink-100 text-pink-700" : "bg-blue-100 text-blue-700"}`}>
+                    {m.fullName?.split(" ").slice(0, 2).map((w) => w[0]).join("")}
+                  </div>
+                  <p className="text-sm font-semibold text-gray-800 leading-tight">{m.fullName}</p>
+                  {m.religion && (
+                    <span className={`mt-1 inline-block text-xs px-2 py-0.5 rounded-full font-medium ${RELIGION_BADGE[m.religion] || "bg-gray-100 text-gray-600"}`}>
+                      {m.religion}
+                    </span>
+                  )}
                 </div>
               );
             })}
-
             {filteredCandidates.length === 0 && (
-              <div className="col-span-full text-center text-gray-500 py-6">
-                No candidates match filter
+              <div className="col-span-full text-center py-10 text-gray-400 text-sm">
+                Tidak ada kandidat yang sesuai filter
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
-      {/* =====================
-          SUBMIT
-      ===================== */}
-      <button
-        onClick={submitLikes}
-        disabled={submitting || !participantId}
-        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold disabled:opacity-50"
-      >
-        {submitting ? "Submitting..." : "Submit Likes"}
-      </button>
+      {/* Submit */}
+      {participant && (
+        <button
+          onClick={submitLikes}
+          disabled={submitting || selectedLikes.length === 0}
+          className="w-full bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-semibold py-3 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {submitting ? "Menyimpan..." : `Simpan pilihan (${selectedLikes.length} dipilih)`}
+        </button>
+      )}
     </div>
   );
 };

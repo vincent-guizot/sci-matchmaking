@@ -6,167 +6,112 @@ const RELIGIONS = ["kristen", "katolik", "konghucu", "buddha"];
 
 const AdminAdd = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    number: "",
-    address: "",
-    religion: "", // ✅ default ALL
-    age: "",
-    image: "",
-    gender: "M",
+    fullName: "", number: "", address: "", religion: "", age: "", image: "", gender: "M",
   });
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === "number" || name === "age"
-          ? value === ""
-            ? ""
-            : Number(value)
-          : value,
+      [name]: name === "number" || name === "age" ? (value === "" ? "" : Number(value)) : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       setLoading(true);
-
       await API.post("/participants", formData);
-
-      await Swal.fire({
-        title: "Success",
-        text: "Participant added successfully",
-        icon: "success",
-        timer: 1400,
-        showConfirmButton: false,
-      });
-
-      // ✅ reset form
-      setFormData({
-        fullName: "",
-        number: "",
-        address: "",
-        religion: "",
-        age: "",
-        image: "",
-        gender: "M",
-      });
+      await Swal.fire({ title: "Berhasil!", text: "Peserta berhasil ditambahkan", icon: "success", timer: 1400, showConfirmButton: false });
+      setFormData({ fullName: "", number: "", address: "", religion: "", age: "", image: "", gender: "M" });
     } catch (err) {
-      Swal.fire(
-        "Error",
-        err.response?.data?.message || "Failed add participant",
-        "error",
-      );
+      Swal.fire("Gagal", err.response?.data?.message || "Terjadi kesalahan", "error");
     } finally {
       setLoading(false);
     }
   };
 
+  const Field = ({ label, children }) => (
+    <div className="space-y-1.5">
+      <label className="block text-sm font-medium text-gray-700">{label}</label>
+      {children}
+    </div>
+  );
+
+  const inputCls = "w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300 transition";
+
   return (
-    <div className="p-4 sm:p-6 max-w-xl mx-auto">
-      <h2 className="text-xl sm:text-2xl font-bold text-orange-600 text-center mb-6">
-        Admin Add Participant
-      </h2>
+    <div className="max-w-xl mx-auto px-4 py-6">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-gray-900">Tambah peserta</h2>
+        <p className="text-sm text-gray-400 mt-0.5">Isi form di bawah untuk menambahkan peserta baru</p>
+      </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 border border-gray-300 rounded-lg p-5 bg-white shadow-sm"
-      >
-        {/* Full Name */}
-        <div>
-          <label className="block mb-1 font-medium">Full Name</label>
-          <input
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-          />
-        </div>
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name + Gender */}
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Nama lengkap">
+              <input
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                placeholder="Nama lengkap"
+                className={inputCls}
+              />
+            </Field>
 
-        {/* Number */}
-        <div>
-          <label className="block mb-1 font-medium">Number</label>
-          <input
-            name="number"
-            type="number"
-            value={formData.number}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-          />
-        </div>
+            <Field label="Gender">
+              <div className="flex gap-2">
+                {[{ v: "M", l: "Pria" }, { v: "F", l: "Wanita" }].map(({ v, l }) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setFormData((p) => ({ ...p, gender: v }))}
+                    className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition ${
+                      formData.gender === v
+                        ? v === "M" ? "border-blue-400 bg-blue-50 text-blue-700" : "border-pink-400 bg-pink-50 text-pink-700"
+                        : "border-gray-200 text-gray-500 hover:border-gray-300"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </Field>
+          </div>
 
-        {/* Address */}
-        <div>
-          <label className="block mb-1 font-medium">Address</label>
-          <input
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-          />
-        </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Nomor">
+              <input name="number" type="number" value={formData.number} onChange={handleChange} required placeholder="No. peserta" className={inputCls} />
+            </Field>
+            <Field label="Tahun lahir">
+              <input name="age" type="number" max={new Date().getFullYear()} value={formData.age} onChange={handleChange} placeholder="Cth: 1990" className={inputCls} />
+            </Field>
+          </div>
 
-        {/* Religion */}
-        <div>
-          <label className="block mb-1 font-medium">Religion</label>
-          <select
-            name="religion"
-            value={formData.religion}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
+          <Field label="Agama">
+            <select name="religion" value={formData.religion} onChange={handleChange} className={inputCls}>
+              <option value="">Pilih agama</option>
+              {RELIGIONS.map((r) => <option key={r} value={r} className="capitalize">{r}</option>)}
+            </select>
+          </Field>
+
+          <Field label="Alamat">
+            <textarea name="address" value={formData.address} onChange={handleChange} placeholder="Alamat lengkap (opsional)" rows={3} className={inputCls + " resize-none"} />
+          </Field>
+
+          <button
+            type="submit"
+            disabled={loading || !formData.fullName || !formData.number}
+            className="w-full bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-semibold py-2.5 rounded-xl transition-all disabled:opacity-50 mt-2"
           >
-            <option value="">Choose</option>
-            {RELIGIONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Birth Year */}
-        <div>
-          <label className="block mb-1 font-medium">Birth Year</label>
-          <input
-            name="age"
-            type="number"
-            max={new Date().getFullYear()}
-            value={formData.age}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-          />
-        </div>
-
-        {/* Gender */}
-        <div>
-          <label className="block mb-1 font-medium">Gender</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-orange-500 outline-none"
-          >
-            <option value="M">Man</option>
-            <option value="F">Woman</option>
-          </select>
-        </div>
-
-        {/* Submit */}
-        <button
-          disabled={loading}
-          className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 transition disabled:opacity-60"
-        >
-          {loading ? "Saving..." : "Save Participant"}
-        </button>
-      </form>
+            {loading ? "Menyimpan..." : "Simpan peserta"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

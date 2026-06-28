@@ -1,22 +1,33 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import Layout from "../layouts/Layout";
 import Members from "../pages/Members";
 import MatchMaking from "../pages/MatchMaking";
 import Matches from "../pages/Matches";
 import ParticipantsLiked from "../pages/ParticipantsLiked";
-
-// ⬇️ import page admin (buat dulu filenya kalau belum ada)
+import MostLiked from "../pages/MostLiked";
 import AdminAdd from "../pages/admin/AdminAdd";
 import AdminList from "../pages/admin/AdminList";
+import Login from "../pages/auth/Login";
+
+// Guard — redirect ke /login kalau belum login
+const ProtectedLayout = () => {
+  const isAuth = localStorage.getItem("sci_auth");
+  if (!isAuth) return <Navigate to="/login" replace />;
+  return <Layout />;
+};
 
 const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
     path: "/",
-    element: <Layout />,
+    element: <ProtectedLayout />,
     children: [
       {
-        index: true, // pengganti path "/"
+        index: true,
         element: <Members />,
       },
       {
@@ -31,8 +42,10 @@ const router = createBrowserRouter([
         path: "participants-liked",
         element: <ParticipantsLiked />,
       },
-
-      // ✅ ADMIN ROUTES
+      {
+        path: "most-liked",
+        element: <MostLiked />,
+      },
       {
         path: "admin",
         children: [
